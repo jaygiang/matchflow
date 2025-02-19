@@ -5,7 +5,7 @@ export default function MatchScoreGauge({ score }) {
   return (
     <div style={{ width: '300px', margin: '0 auto' }}>
       <GaugeComponent
-        value={score}
+        value={Math.round(score)}
         type="radial"
         labels={{
           tickLabels: {
