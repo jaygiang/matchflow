@@ -84,8 +84,10 @@ export async function GET(request) {
         const score3Percent = Math.round(
           cosineSimilarity(currentEmbeddings[2], matchedEmbeddings[2]) * 100,
         );
-
-        // Validate embeddings exist before calculating similarity
+console.log("user.name score1Percent", user.name, score1Percent);
+console.log("user.name score2Percent", user.name, score2Percent);
+console.log("user.name score3Percent", user.name, score3Percent);
+        // // Validate embeddings exist before calculating similarity
         if (!currentUser.embedding || !user.embedding) {
           return {
             userId: user.userId,
@@ -100,13 +102,14 @@ export async function GET(request) {
             },
           };
         }
-
+console.log('currentUser.embedding', currentUser.embedding);
+console.log('user.embedding', user.embedding);
         // Overall similarity using the stored embedding
         const overallSimilarity = cosineSimilarity(
           currentUser.embedding,
           user.embedding,
         );
-
+console.log("overallSimilarity", overallSimilarity);
         return {
           userId: user.userId,
           name: user.name,
