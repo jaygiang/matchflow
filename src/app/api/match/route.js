@@ -101,7 +101,7 @@ export async function GET(request) {
 
     // Generate explanation using OpenAI Chat Completions
     const matchedUser = otherUsers.find((u) => u.userId === bestMatch.userId);
-    const { score1, score2, score3 } = bestMatch.questionScores;
+    const { score1: score1Percent, score2: score2Percent, score3: score3Percent } = bestMatch.questionScores;
 
     const prompt = `
     You are the user in this conversation, and you have a matched user named ${matchedUser.name}. 
