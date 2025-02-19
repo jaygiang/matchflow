@@ -33,7 +33,7 @@ export default function MatchScoreGauge({ score }) {
           }}
         />
       </div>
-      <p className="mt-4 font-normal text-center text-gray-700 dark:text-gray-400">
+      <p className="mt-4 font-medium text-center text-gray-600 dark:text-gray-300">
         Your compatibility score shows how well you match based on your interests and preferences.
       </p>
     </div>
