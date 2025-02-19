@@ -66,21 +66,48 @@ export default function Match() {
             <div className="mt-6 px-4">
               <h3 className="text-lg text-center font-medium text-gray-900 dark:text-white mb-2">Why You Might Click</h3>
               <div className="text-gray-500 dark:text-gray-400 text-sm">
-                <p className="mb-2">{matchData.explanation.split('-')[0].trim()}</p>
-                <ul className="list-disc pl-6">
-                  {matchData.explanation
-                    .split('\n')
-                    .slice(1)
-                    .map(line => line.trim())
-                    .filter(line => line.startsWith('-'))
-                    .map((item, index) => (
-                      <li key={index} className="mb-1 pl-1">
-                        <span className="block">
-                          {item.substring(1).trim()}
-                        </span>
-                      </li>
-                    ))}
-                </ul>
+                <p className="mb-2">{matchData.explanation.split('Similarities:')[0].trim()}</p>
+                
+                {matchData.explanation.includes('Similarities:') && (
+                  <>
+                    <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Similarities:</h4>
+                    <ul className="list-disc pl-6 mb-4">
+                      {matchData.explanation
+                        .split('Similarities:')[1]
+                        .split('Differences:')[0]
+                        .split('\n')
+                        .map(line => line.trim())
+                        .filter(line => line.startsWith('-'))
+                        .map((item, index) => (
+                          <li key={index} className="mb-1 pl-1">
+                            <span className="block">
+                              {item.substring(1).trim()}
+                            </span>
+                          </li>
+                        ))}
+                    </ul>
+                  </>
+                )}
+                
+                {matchData.explanation.includes('Differences:') && (
+                  <>
+                    <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Differences:</h4>
+                    <ul className="list-disc pl-6">
+                      {matchData.explanation
+                        .split('Differences:')[1]
+                        .split('\n')
+                        .map(line => line.trim())
+                        .filter(line => line.startsWith('-'))
+                        .map((item, index) => (
+                          <li key={index} className="mb-1 pl-1">
+                            <span className="block">
+                              {item.substring(1).trim()}
+                            </span>
+                          </li>
+                        ))}
+                    </ul>
+                  </>
+                )}
               </div>
             </div>
 
