@@ -61,11 +61,28 @@ export async function GET(request) {
 
     // Generate explanation using OpenAI Chat Completions
     const matchedUser = otherUsers.find((u) => u.userId === bestMatch.userId);
-    const prompt = `Based on their survey answers:
-You: ${currentUser.answer1} ${currentUser.answer2} ${currentUser.answer3}
-${matchedUser.name}: ${matchedUser.answer1} ${matchedUser.answer2} ${matchedUser.answer3}
-
-Explain in 1 sentence why these people might be good friends then unordered list out the similarities between them below.`;
+    const prompt = `Based on their survey responses:
+    You:
+    Q1: How would close friends describe you?
+    A: ${currentUser.answer1}
+    
+    Q2: What are some random things you geek out on (unrelated to your job)?
+    A: ${currentUser.answer2}
+    
+    Q3: Describe your pet peeves or things that bug you.
+    A: ${currentUser.answer3}
+    
+    ${matchedUser.name}:
+    Q1: How would close friends describe you?
+    A: ${matchedUser.answer1}
+    
+    Q2: What are some random things you geek out on (unrelated to your job)?
+    A: ${matchedUser.answer2}
+    
+    Q3: Describe your pet peeves or things that bug you.
+    A: ${matchedUser.answer3}
+    
+    Explain in 1 sentence why these two might be good friends, then provide an unordered list of the similarities between them. When listing similarities, don't have to start off with "They both" and start off with '-'.`;
 
     const openaiResponse = await axios.post(
       "https://api.openai.com/v1/chat/completions",
