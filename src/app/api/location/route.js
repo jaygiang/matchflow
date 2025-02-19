@@ -50,7 +50,7 @@ export async function GET(request) {
       {
         params: {
           location: `${midpoint.lat},${midpoint.lng}`,
-          radius: 3000, // 3km radius
+          radius: 10000, // 3km radius
           type: 'cafe',
           keyword: 'coffee',
           rankby: 'rating',
@@ -58,7 +58,7 @@ export async function GET(request) {
         },
       }
     );
-
+console.log('placesResponse:', placesResponse.data);
     // Process and return top 5 venues
     const venues = placesResponse.data.results
       .slice(0, 5)
