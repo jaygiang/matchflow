@@ -33,7 +33,12 @@ export default function Match() {
     fetchMatch();
   }, [router]);
 
-  if (loading) return <div>Finding your match...</div>;
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="text-lg mb-4 text-gray-700 dark:text-gray-300">Finding your match...</div>
+      <div className="w-12 h-12 rounded-full border-4 border-blue-600 border-t-transparent animate-spin"></div>
+    </div>
+  );
   if (!matchData) return <div>No match found</div>;
 
   return (
