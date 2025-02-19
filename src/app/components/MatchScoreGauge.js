@@ -1,17 +1,34 @@
 import dynamic from "next/dynamic";
 const GaugeComponent = dynamic(() => import('react-gauge-component'), { ssr: false });
 
-
 export default function MatchScoreGauge({ score }) {
   return (
     <div style={{ width: '300px', margin: '0 auto' }}>
       <GaugeComponent
-        id="match-gauge"
-        nrOfLevels={20}
-        percent={score}
-        colors={['#FF5F6D', '#FFC371', '#38ef7d']}
-        textColor="#000000"
-        formatTextValue={value => `${Math.round(value * 100)}% Match`}
+        value={score}
+        type="radial"
+        labels={{
+          tickLabels: {
+            type: "inner",
+            ticks: [
+              { value: 20 },
+              { value: 40 },
+              { value: 60 },
+              { value: 80 },
+              { value: 100 }
+            ]
+          }
+        }}
+        arc={{
+          colorArray: ['#5BE12C','#EA4228'],
+          subArcs: [{limit: 10}, {limit: 30}, {}, {}, {}],
+          padding: 0.02,
+          width: 0.3
+        }}
+        pointer={{
+          elastic: true,
+          animationDelay: 0
+        }}
       />
     </div>
   );
