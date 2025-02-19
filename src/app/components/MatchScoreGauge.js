@@ -27,7 +27,7 @@ export default function MatchScoreGauge({ score }) {
         }}
         pointer={{
           elastic: true,
-          animationDelay: 0
+          animationDelay: 5000
         }}
       />
     </div>
