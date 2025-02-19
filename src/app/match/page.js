@@ -73,6 +73,7 @@ export default function Match() {
             <div className="mt-4 md:mt-6 w-full px-4">
               <button
                 onClick={async () => {
+                  console.log('Finding coffee spots halfway between:', matchData.currentUserLocation, matchData.match.location);
                   try {
                     const response = await fetch(
                       `/api/location?locationA=${encodeURIComponent(matchData.currentUserLocation)}&locationB=${encodeURIComponent(matchData.match.location)}`
