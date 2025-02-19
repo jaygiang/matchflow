@@ -72,9 +72,9 @@ export async function GET(request) {
       const matchedEmbeddings = embeddings.slice(3);
 
       // Calculate per-question similarity scores
-      const score1 = Math.round(cosineSimilarity(currentEmbeddings[0], matchedEmbeddings[0]) * 100);
-      const score2 = Math.round(cosineSimilarity(currentEmbeddings[1], matchedEmbeddings[1]) * 100);
-      const score3 = Math.round(cosineSimilarity(currentEmbeddings[2], matchedEmbeddings[2]) * 100);
+      const score1Percent = Math.round(cosineSimilarity(currentEmbeddings[0], matchedEmbeddings[0]) * 100);
+      const score2Percent = Math.round(cosineSimilarity(currentEmbeddings[1], matchedEmbeddings[1]) * 100);
+      const score3Percent = Math.round(cosineSimilarity(currentEmbeddings[2], matchedEmbeddings[2]) * 100);
       
       // Overall similarity using the stored embedding
       const overallSimilarity = cosineSimilarity(
@@ -88,7 +88,11 @@ export async function GET(request) {
         profession: user.profession,
         location: user.location,
         matchScore: Math.round(overallSimilarity * 100),
-        questionScores: { score1, score2, score3 }
+        questionScores: {
+          score1: score1Percent,
+          score2: score2Percent,
+          score3: score3Percent
+        }
       };
     }));
 
