@@ -5,7 +5,7 @@ export default function MatchScoreGauge({ score }) {
   return (
     <div style={{ width: '300px', margin: '0 auto' }}>
       <GaugeComponent
-        value={Math.round(score)}
+        value={score}
         type="radial"
         labels={{
           tickLabels: {
@@ -27,7 +27,7 @@ export default function MatchScoreGauge({ score }) {
         }}
         pointer={{
           elastic: true,
-          animationDelay: 5000
+          animationDelay: 0
         }}
       />
     </div>
