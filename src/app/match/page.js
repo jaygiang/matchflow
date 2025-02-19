@@ -2,11 +2,14 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import MatchScoreGauge from '../components/MatchScoreGauge';
+import CoffeeSpotModal from '../components/CoffeeSpotModal';
 import confetti from 'canvas-confetti';
 
 export default function Match() {
   const [matchData, setMatchData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [venues, setVenues] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -76,11 +79,8 @@ export default function Match() {
                     );
                     const data = await response.json();
                     if (data.venues) {
-                      // Create a modal or expand a section to show the venues
-                      const venuesList = data.venues.map(venue => 
-                        `${venue.name} (${venue.rating}⭐️)\n${venue.address}\n\nOpen in Maps: ${venue.mapsUrl}`
-                      ).join('\n\n');
-                      alert('Suggested Coffee Spots:\n\n' + venuesList);
+                      setVenues(data.venues);
+                      setIsModalOpen(true);
                     }
                   } catch (error) {
                     console.error('Error fetching meetup locations:', error);
@@ -91,6 +91,11 @@ export default function Match() {
               >
                 Find Coffee Spots Halfway
               </button>
+              <CoffeeSpotModal 
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                venues={venues}
+              />
             </div>
           </div>
         </div>
