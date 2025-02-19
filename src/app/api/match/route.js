@@ -85,6 +85,22 @@ export async function GET(request) {
           cosineSimilarity(currentEmbeddings[2], matchedEmbeddings[2]) * 100,
         );
 
+        // Validate embeddings exist before calculating similarity
+        if (!currentUser.embedding || !user.embedding) {
+          return {
+            userId: user.userId,
+            name: user.name,
+            profession: user.profession,
+            location: user.location,
+            matchScore: 0,
+            questionScores: {
+              score1: score1Percent,
+              score2: score2Percent,
+              score3: score3Percent,
+            },
+          };
+        }
+
         // Overall similarity using the stored embedding
         const overallSimilarity = cosineSimilarity(
           currentUser.embedding,
