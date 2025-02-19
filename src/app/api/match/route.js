@@ -41,23 +41,42 @@ export async function GET(request) {
       (record) => record.get("u").properties,
     );
 
-    // Calculate per-question similarity scores and overall match
-    const matches = otherUsers.map((user) => {
-      // Calculate similarity scores for each question
-      const score1 = Math.round(cosineSimilarity(
-        [currentUser.answer1], 
-        [user.answer1]
-      ) * 100);
-      const score2 = Math.round(cosineSimilarity(
-        [currentUser.answer2], 
-        [user.answer2]
-      ) * 100);
-      const score3 = Math.round(cosineSimilarity(
-        [currentUser.answer3], 
-        [user.answer3]
-      ) * 100);
+    // Calculate matches with per-question embeddings and similarity scores
+    const matches = await Promise.all(otherUsers.map(async (user) => {
+      // Generate embeddings for each answer pair
+      const embeddingInputs = [
+        currentUser.answer1,
+        currentUser.answer2,
+        currentUser.answer3,
+        user.answer1,
+        user.answer2,
+        user.answer3
+      ];
+
+      const embeddingResponse = await axios.post(
+        "https://api.openai.com/v1/embeddings",
+        {
+          input: embeddingInputs,
+          model: "text-embedding-ada-002"
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          },
+        }
+      );
+
+      const embeddings = embeddingResponse.data.data.map(item => item.embedding);
+      const currentEmbeddings = embeddings.slice(0, 3);
+      const matchedEmbeddings = embeddings.slice(3);
+
+      // Calculate per-question similarity scores
+      const score1 = Math.round(cosineSimilarity(currentEmbeddings[0], matchedEmbeddings[0]) * 100);
+      const score2 = Math.round(cosineSimilarity(currentEmbeddings[1], matchedEmbeddings[1]) * 100);
+      const score3 = Math.round(cosineSimilarity(currentEmbeddings[2], matchedEmbeddings[2]) * 100);
       
-      // Overall similarity using the embedding
+      // Overall similarity using the stored embedding
       const overallSimilarity = cosineSimilarity(
         currentUser.embedding,
         user.embedding,
@@ -71,7 +90,7 @@ export async function GET(request) {
         matchScore: Math.round(overallSimilarity * 100),
         questionScores: { score1, score2, score3 }
       };
-    });
+    }));
 
     // Sort by match score and get the best match
     const bestMatch = matches.sort((a, b) => b.matchScore - a.matchScore)[0];
