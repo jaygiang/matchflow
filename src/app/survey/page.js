@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 
 export default function Survey() {
   const [surveyData, setSurveyData] = useState({
+    profession: '',
     location: '',
     answer1: '',
     answer2: '',
@@ -54,6 +55,12 @@ console.log('userData', userData);
   return (
     <form onSubmit={handleSubmit}>
       <h1>Survey</h1>
+      <input
+        name="profession"
+        placeholder="What is your profession?"
+        onChange={handleChange}
+        required
+      />
       <input
         name="location"
         placeholder="Location (City or Address)"
