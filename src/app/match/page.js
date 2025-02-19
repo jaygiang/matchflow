@@ -78,9 +78,12 @@ export default function Match() {
                       `/api/location?locationA=${encodeURIComponent(matchData.currentUserLocation)}&locationB=${encodeURIComponent(matchData.match.location)}`
                     );
                     const data = await response.json();
-                    if (data.venues) {
+                    console.log('Received venue data:', data);
+                    if (data.venues && data.venues.length > 0) {
                       setVenues(data.venues);
                       setIsModalOpen(true);
+                    } else {
+                      alert('No coffee spots found in the area');
                     }
                   } catch (error) {
                     console.error('Error fetching meetup locations:', error);
