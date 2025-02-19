@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-// import MatchScoreGauge from '../components/MatchScoreGauge';
+import MatchScoreGauge from '../components/MatchScoreGauge';
 
 export default function Match() {
   const [matchData, setMatchData] = useState(null);
@@ -39,7 +39,7 @@ export default function Match() {
   return (
     <div>
       <h1>Your Best Match</h1>
-      {/* <MatchScoreGauge score={matchData.match.matchScore} /> */}
+      <MatchScoreGauge score={matchData.match.matchScore} />
       <div>
         <h2>{matchData.match.name}</h2>
         <p>{matchData.match.profession}</p>
