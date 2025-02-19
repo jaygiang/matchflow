@@ -67,15 +67,17 @@ export default function Match() {
               <h3 className="text-lg text-center font-medium text-gray-900 dark:text-white mb-2">Why You Might Click</h3>
               <div className="text-gray-500 dark:text-gray-400 text-sm">
                 <p className="mb-2">{matchData.explanation.split('-')[0].trim()}</p>
-                <ul className="list-disc list-inside pl-2">
+                <ul className="list-disc pl-6">
                   {matchData.explanation
                     .split('\n')
                     .slice(1)
                     .map(line => line.trim())
                     .filter(line => line.startsWith('-'))
                     .map((item, index) => (
-                      <li key={index} className="mb-1">
-                        {item.substring(1).trim()}
+                      <li key={index} className="mb-1 pl-2">
+                        <span className="block -indent-6 pl-6">
+                          {item.substring(1).trim()}
+                        </span>
                       </li>
                     ))}
                 </ul>
