@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import MatchScoreGauge from '../components/MatchScoreGauge';
+import confetti from 'canvas-confetti';
 
 export default function Match() {
   const [matchData, setMatchData] = useState(null);
@@ -23,6 +24,13 @@ export default function Match() {
         setMatchData(data);
         // Only clear survey data, keep userId for potential future use
         localStorage.removeItem('surveyData');
+        
+        // Trigger confetti effect
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
       } catch (error) {
         console.error('Error fetching match:', error);
       } finally {
