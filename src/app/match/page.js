@@ -21,6 +21,8 @@ export default function Match() {
         if (!response.ok) throw new Error('Failed to fetch match');
         const data = await response.json();
         setMatchData(data);
+        // Only clear survey data, keep userId for potential future use
+        localStorage.removeItem('surveyData');
       } catch (error) {
         console.error('Error fetching match:', error);
       } finally {
