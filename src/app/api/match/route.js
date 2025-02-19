@@ -52,7 +52,7 @@ export async function GET(request) {
         name: user.name,
         profession: user.profession,
         location: user.location,
-        matchScore: similarity * 100,
+        matchScore: Math.round(similarity * 100),
       };
     });
 
