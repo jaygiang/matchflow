@@ -65,7 +65,7 @@ export async function GET(request) {
 You: ${currentUser.answer1} ${currentUser.answer2} ${currentUser.answer3}
 ${matchedUser.name}: ${matchedUser.answer1} ${matchedUser.answer2} ${matchedUser.answer3}
 
-Explain in 2-3 sentences why these people might be good friends.`;
+Explain in 1 sentence why these people might be good friends then unordered list out the similarities between them below.`;
 
     const openaiResponse = await axios.post(
       "https://api.openai.com/v1/chat/completions",
