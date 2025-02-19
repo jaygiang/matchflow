@@ -72,7 +72,9 @@ export default function Survey() {
                 <svg className="rtl:rotate-180 block w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                   <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
                 </svg>
-                <span className="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Survey</span>
+                <span className="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">
+                  {step === 1 ? 'Basic Information' : 'Tell Us About Yourself'}
+                </span>
               </div>
             </li>
             <li aria-current="page">
@@ -81,7 +83,7 @@ export default function Survey() {
                   <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
                 </svg>
                 <span className="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">
-                  {step === 1 ? 'Basic Info' : 'Personality'}
+                  Step {step} of 2
                 </span>
               </div>
             </li>
