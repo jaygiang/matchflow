@@ -87,35 +87,17 @@ export async function GET(request) {
 console.log("user.name score1Percent", user.name, score1Percent);
 console.log("user.name score2Percent", user.name, score2Percent);
 console.log("user.name score3Percent", user.name, score3Percent);
-        // // Validate embeddings exist before calculating similarity
-        if (!currentUser.embedding || !user.embedding) {
-          return {
-            userId: user.userId,
-            name: user.name,
-            profession: user.profession,
-            location: user.location,
-            matchScore: 0,
-            questionScores: {
-              score1: score1Percent,
-              score2: score2Percent,
-              score3: score3Percent,
-            },
-          };
-        }
-console.log('currentUser.embedding', currentUser.embedding);
-console.log('user.embedding', user.embedding);
-        // Overall similarity using the stored embedding
-        const overallSimilarity = cosineSimilarity(
-          currentUser.embedding,
-          user.embedding,
+        // Calculate overall match score as average of individual scores
+        const matchScore = Math.round(
+          (score1Percent + score2Percent + score3Percent) / 3
         );
-console.log("overallSimilarity", overallSimilarity);
+
         return {
           userId: user.userId,
           name: user.name,
           profession: user.profession,
           location: user.location,
-          matchScore: Math.round(overallSimilarity * 100),
+          matchScore: matchScore,
           questionScores: {
             score1: score1Percent,
             score2: score2Percent,
