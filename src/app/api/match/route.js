@@ -106,11 +106,37 @@ export async function GET(request) {
       }),
     );
 
+    // Check if we have any matches
+    if (!matches || matches.length === 0) {
+      await session.close();
+      return NextResponse.json(
+        { message: "No matches found" },
+        { status: 404 }
+      );
+    }
+
     // Sort by match score and get the best match
     const bestMatch = matches.sort((a, b) => b.matchScore - a.matchScore)[0];
 
-    // Generate explanation using OpenAI Chat Completions
+    // Validate bestMatch and its properties
+    if (!bestMatch || !bestMatch.questionScores) {
+      await session.close();
+      return NextResponse.json(
+        { message: "Invalid match data" },
+        { status: 500 }
+      );
+    }
+
+    // Find matched user and validate
     const matchedUser = otherUsers.find((u) => u.userId === bestMatch.userId);
+    if (!matchedUser) {
+      await session.close();
+      return NextResponse.json(
+        { message: "Matched user not found" },
+        { status: 500 }
+      );
+    }
+
     const {
       score1: score1Percent,
       score2: score2Percent,
