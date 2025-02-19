@@ -5,12 +5,23 @@ import Link from 'next/link';
 
 export default function Survey() {
   const [step, setStep] = useState(1);
-  const [surveyData, setSurveyData] = useState({
-    profession: '',
-    location: '',
-    answer1: '',
-    answer2: '',
-    answer3: '',
+  const [surveyData, setSurveyData] = useState(() => {
+    // Initialize with empty values
+    const initialData = {
+      profession: '',
+      location: '',
+      answer1: '',
+      answer2: '',
+      answer3: '',
+    };
+    
+    // Try to get existing data from localStorage if it exists
+    if (typeof window !== 'undefined') {
+      const savedData = localStorage.getItem('surveyData');
+      return savedData ? { ...initialData, ...JSON.parse(savedData) } : initialData;
+    }
+    
+    return initialData;
   });
   const router = useRouter();
 
@@ -20,6 +31,8 @@ export default function Survey() {
 
   const handleNextStep = (e) => {
     e.preventDefault();
+    // Save current state to localStorage
+    localStorage.setItem('surveyData', JSON.stringify(surveyData));
     setStep(2);
   };
 
@@ -72,9 +85,12 @@ export default function Survey() {
                 <svg className="rtl:rotate-180 block w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                   <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
                 </svg>
-                <span className="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">
-                  {step === 1 ? 'Basic Information' : 'Tell Us About Yourself'}
-                </span>
+                <button 
+                  onClick={() => setStep(1)} 
+                  className="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white"
+                >
+                  Basic Information
+                </button>
               </div>
             </li>
             <li aria-current="page">
@@ -82,9 +98,11 @@ export default function Survey() {
                 <svg className="rtl:rotate-180 w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                   <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
                 </svg>
-                <span className="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">
-                  Step {step} of 2
-                </span>
+                {step === 2 && (
+                  <span className="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">
+                    Tell Us About Yourself
+                  </span>
+                )}
               </div>
             </li>
           </ol>
@@ -105,6 +123,11 @@ export default function Survey() {
                     id="profession"
                     className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
+                    value={surveyData.answer3}
+                    value={surveyData.answer2}
+                    value={surveyData.answer1}
+                    value={surveyData.location}
+                    value={surveyData.profession}
                     onChange={handleChange}
                     required
                   />
