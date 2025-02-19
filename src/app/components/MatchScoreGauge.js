@@ -3,33 +3,39 @@ const GaugeComponent = dynamic(() => import('react-gauge-component'), { ssr: fal
 
 export default function MatchScoreGauge({ score }) {
   return (
-    <div style={{ width: '300px', margin: '0 auto' }}>
-      <GaugeComponent
-        value={score}
-        type="radial"
-        labels={{
-          tickLabels: {
-            type: "inner",
-            ticks: [
-              { value: 20 },
-              { value: 40 },
-              { value: 60 },
-              { value: 80 },
-              { value: 100 }
-            ]
-          }
-        }}
-        arc={{
-          colorArray: ['#5BE12C','#EA4228'],
-          subArcs: [{limit: 10}, {limit: 30}, {}, {}, {}],
-          padding: 0.02,
-          width: 0.3
-        }}
-        pointer={{
-          elastic: true,
-          animationDelay: 0
-        }}
-      />
+    <div className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+      <h5 className="mb-2 text-2xl font-bold tracking-tight text-center text-gray-900 dark:text-white">Match Score</h5>
+      <div style={{ width: '300px', margin: '0 auto' }}>
+        <GaugeComponent
+          value={score}
+          type="radial"
+          labels={{
+            tickLabels: {
+              type: "inner",
+              ticks: [
+                { value: 20 },
+                { value: 40 },
+                { value: 60 },
+                { value: 80 },
+                { value: 100 }
+              ]
+            }
+          }}
+          arc={{
+            colorArray: ['#5BE12C','#EA4228'],
+            subArcs: [{limit: 10}, {limit: 30}, {}, {}, {}],
+            padding: 0.02,
+            width: 0.3
+          }}
+          pointer={{
+            elastic: true,
+            animationDelay: 0
+          }}
+        />
+      </div>
+      <p className="mt-4 font-normal text-center text-gray-700 dark:text-gray-400">
+        Your compatibility score shows how well you match based on your interests and preferences.
+      </p>
     </div>
   );
 }
