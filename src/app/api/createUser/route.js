@@ -5,7 +5,19 @@ import axios from 'axios';
 export async function POST(request) {
   try {
     const { name, email, profession, location, answer1, answer2, answer3 } = await request.json();
-    const surveyText = `${answer1} ${answer2} ${answer3}`;
+    
+    const question1 = "How would close friends describe you?";
+    const question2 = "What are some random things you geek out on (unrelated to your job)?";
+    const question3 = "Describe your pet peeves or things that bug you.";
+
+    const surveyText = `
+Q: ${question1}
+A: ${answer1}
+Q: ${question2}
+A: ${answer2}
+Q: ${question3}
+A: ${answer3}
+    `.trim();
 
     // Generate embedding using OpenAI
     const openaiResponse = await axios.post(
@@ -32,6 +44,9 @@ export async function POST(request) {
         email: $email,
         profession: $profession,
         location: $location,
+        question1: $question1,
+        question2: $question2,
+        question3: $question3,
         answer1: $answer1,
         answer2: $answer2,
         answer3: $answer3,
@@ -48,6 +63,9 @@ export async function POST(request) {
         answer2,
         answer3,
         embedding,
+        question1,
+        question2,
+        question3
       }
     );
     await session.close();
