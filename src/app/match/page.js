@@ -52,6 +52,7 @@ export default function Match() {
   return (
     <section className="bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">We Found Your Match! 🎉</h1>
         <MatchScoreGauge score={matchData.match.matchScore} />
         
         <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mt-8">
