@@ -56,9 +56,7 @@ export default function Match() {
     <section className="bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">We Found Your Match! 🎉</h1>
-        <MatchScoreGauge score={matchData.match.matchScore} />
-        
-        <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mt-8">
+        <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
           <div className="flex flex-col items-center pb-10 pt-8">
             <img className="w-24 h-24 mb-3 rounded-full shadow-lg" src="/profile-placeholder.jpg" alt={`${matchData.match.name}'s profile`}/>
             <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{matchData.match.name}</h5>
@@ -106,6 +104,10 @@ export default function Match() {
               />
             </div>
           </div>
+        </div>
+        
+        <div className="mt-8">
+          <MatchScoreGauge score={matchData.match.matchScore} />
         </div>
       </div>
     </section>

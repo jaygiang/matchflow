@@ -3,7 +3,7 @@ const GaugeComponent = dynamic(() => import('react-gauge-component'), { ssr: fal
 
 export default function MatchScoreGauge({ score }) {
   return (
-    <div className="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+    <div className="block max-w-sm p-6 bg-gray-100 border border-gray-200 rounded-lg shadow-sm dark:bg-gray-700 dark:border-gray-600">
       <h5 className="mb-2 text-2xl font-bold tracking-tight text-center text-gray-900 dark:text-white">Match Score</h5>
       <div style={{ width: '300px', margin: '0 auto' }}>
         <GaugeComponent
