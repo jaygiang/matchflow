@@ -97,6 +97,7 @@ Explain in 2-3 sentences why these people might be good friends.`;
       {
         match: bestMatch,
         explanation,
+        currentUserLocation: currentUser.location,
       },
       { status: 200 },
     );

@@ -73,6 +73,10 @@ export default function Match() {
             <div className="mt-4 md:mt-6 w-full px-4">
               <button
                 onClick={async () => {
+                  if (!matchData.currentUserLocation || !matchData.match.location) {
+                    alert('Location information is missing. Please ensure both users have valid locations.');
+                    return;
+                  }
                   console.log('Finding coffee spots halfway between:', matchData.currentUserLocation, matchData.match.location);
                   try {
                     const response = await fetch(
