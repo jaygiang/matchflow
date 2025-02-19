@@ -59,6 +59,7 @@ export default function Survey() {
       const result = await response.json();
       localStorage.setItem('userId', result.userId);
       localStorage.removeItem('signupData');
+      localStorage.removeItem('surveyData');
       router.push('/match');
     } catch (error) {
       console.error('Error submitting form:', error);
