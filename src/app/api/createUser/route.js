@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export async function POST(request) {
   try {
-    const { name, email, age, profession, location, answer1, answer2, answer3 } = await request.json();
+    const { name, email, profession, location, answer1, answer2, answer3 } = await request.json();
     const surveyText = `${answer1} ${answer2} ${answer3}`;
 
     // Generate embedding using OpenAI
@@ -30,7 +30,6 @@ export async function POST(request) {
         userId: apoc.create.uuid(),
         name: $name,
         email: $email,
-        age: $age,
         profession: $profession,
         location: $location,
         answer1: $answer1,
@@ -43,7 +42,6 @@ export async function POST(request) {
       {
         name,
         email,
-        age: parseInt(age),
         profession,
         location,
         answer1,
