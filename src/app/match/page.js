@@ -74,8 +74,8 @@ export default function Match() {
                     .map(line => line.trim())
                     .filter(line => line.startsWith('-'))
                     .map((item, index) => (
-                      <li key={index} className="mb-1 pl-2">
-                        <span className="block -indent-6 pl-6">
+                      <li key={index} className="mb-1 pl-1">
+                        <span className="block">
                           {item.substring(1).trim()}
                         </span>
                       </li>
