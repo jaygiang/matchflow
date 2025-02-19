@@ -41,18 +41,35 @@ export async function GET(request) {
       (record) => record.get("u").properties,
     );
 
-    // Calculate similarity scores
+    // Calculate per-question similarity scores and overall match
     const matches = otherUsers.map((user) => {
-      const similarity = cosineSimilarity(
+      // Calculate similarity scores for each question
+      const score1 = Math.round(cosineSimilarity(
+        [currentUser.answer1], 
+        [user.answer1]
+      ) * 100);
+      const score2 = Math.round(cosineSimilarity(
+        [currentUser.answer2], 
+        [user.answer2]
+      ) * 100);
+      const score3 = Math.round(cosineSimilarity(
+        [currentUser.answer3], 
+        [user.answer3]
+      ) * 100);
+      
+      // Overall similarity using the embedding
+      const overallSimilarity = cosineSimilarity(
         currentUser.embedding,
         user.embedding,
       );
+
       return {
         userId: user.userId,
         name: user.name,
         profession: user.profession,
         location: user.location,
-        matchScore: Math.round(similarity * 100),
+        matchScore: Math.round(overallSimilarity * 100),
+        questionScores: { score1, score2, score3 }
       };
     });
 
@@ -61,28 +78,26 @@ export async function GET(request) {
 
     // Generate explanation using OpenAI Chat Completions
     const matchedUser = otherUsers.find((u) => u.userId === bestMatch.userId);
-    const prompt = `Based on their survey responses:
-    You:
-    Q1: How would close friends describe you?
-    A: ${currentUser.answer1}
-    
-    Q2: What are some random things you geek out on (unrelated to your job)?
-    A: ${currentUser.answer2}
-    
-    Q3: Describe your pet peeves or things that bug you.
-    A: ${currentUser.answer3}
-    
-    ${matchedUser.name}:
-    Q1: How would close friends describe you?
-    A: ${matchedUser.answer1}
-    
-    Q2: What are some random things you geek out on (unrelated to your job)?
-    A: ${matchedUser.answer2}
-    
-    Q3: Describe your pet peeves or things that bug you.
-    A: ${matchedUser.answer3}
-    
-    Explain in 1 sentence why these two might be good friends, then provide an unordered list of the similarities between them. When listing similarities, don't have to start off with "They both" and start off with '-'.`;
+    const { score1, score2, score3 } = bestMatch.questionScores;
+
+    const prompt = `Based on the following similarity scores and survey responses:
+
+Question 1: "How would close friends describe you?"
+- Similarity Score: ${score1}%
+- Your Answer: ${currentUser.answer1}
+- Matched User's Answer: ${matchedUser.answer1}
+
+Question 2: "What are some random things you geek out on (unrelated to your job)?"
+- Similarity Score: ${score2}%
+- Your Answer: ${currentUser.answer2}
+- Matched User's Answer: ${matchedUser.answer2}
+
+Question 3: "Describe your pet peeves or things that bug you."
+- Similarity Score: ${score3}%
+- Your Answer: ${currentUser.answer3}
+- Matched User's Answer: ${matchedUser.answer3}
+
+Please explain in one sentence why these two might be good friends. Then, list out the similarities between their responses as an unordered list and highlight any major differences.`;
 
     const openaiResponse = await axios.post(
       "https://api.openai.com/v1/chat/completions",
