@@ -66,23 +66,19 @@ export default function Match() {
             <div className="mt-6 px-4">
               <h3 className="text-lg text-center font-medium text-gray-900 dark:text-white mb-2">Why You Might Click</h3>
               <div className="text-gray-500 dark:text-gray-400 text-sm">
-                {matchData.explanation.includes('Similarities:') ? (
-                  <>
-                    <p className="mb-2">{matchData.explanation.split('Similarities:')[0]}</p>
-                    <p className="mb-1 font-semibold text-gray-900 dark:text-white">Similarities:</p>
-                    <ul className="list-disc list-inside pl-2">
-                      {matchData.explanation
-                        .split('Similarities:')[1]
-                        .split('-')
-                        .filter(item => item.trim())
-                        .map((item, index) => (
-                          <li key={index} className="mb-1">{item.trim()}</li>
-                        ))}
-                    </ul>
-                  </>
-                ) : (
-                  <p>{matchData.explanation}</p>
-                )}
+                <p className="mb-2">{matchData.explanation.split('-')[0].trim()}</p>
+                <ul className="list-disc list-inside pl-2">
+                  {matchData.explanation
+                    .split('\n')
+                    .slice(1)
+                    .map(line => line.trim())
+                    .filter(line => line.startsWith('-'))
+                    .map((item, index) => (
+                      <li key={index} className="mb-1">
+                        {item.substring(1).trim()}
+                      </li>
+                    ))}
+                </ul>
               </div>
             </div>
 
