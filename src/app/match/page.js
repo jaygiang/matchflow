@@ -69,11 +69,11 @@ export default function Match() {
                 {matchData.explanation.includes('Similarities:') ? (
                   <>
                     <p className="mb-2">{matchData.explanation.split('Similarities:')[0]}</p>
-                    <p className="mb-1 font-medium">Similarities:</p>
+                    <p className="mb-1 font-semibold text-gray-900 dark:text-white">Similarities:</p>
                     <ul className="list-disc list-inside pl-2">
                       {matchData.explanation
                         .split('Similarities:')[1]
-                        .split(/\d+\.\s+/)
+                        .split('-')
                         .filter(item => item.trim())
                         .map((item, index) => (
                           <li key={index} className="mb-1">{item.trim()}</li>
