@@ -50,11 +50,13 @@ export async function GET(request) {
       {
         params: {
           location: `${midpoint.lat},${midpoint.lng}`,
-          radius: 10000, // 3km radius
+          radius: 5000, // 5km radius
           type: 'cafe',
-          keyword: 'coffee',
-          rankby: 'rating',
+          keyword: 'coffee shop',
           key: process.env.GOOGLE_MAPS_API_KEY,
+          minprice: 0,
+          maxprice: 3,
+          opennow: true
         },
       }
     );
