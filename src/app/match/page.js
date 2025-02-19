@@ -67,18 +67,29 @@ export default function Match() {
               <p className="text-gray-500 dark:text-gray-400 text-sm">{matchData.explanation}</p>
             </div>
 
-            <div className="flex mt-4 md:mt-6">
+            <div className="mt-4 md:mt-6 w-full px-4">
               <button
-                onClick={() => router.push({
-                  pathname: '/meetup',
-                  query: {
-                    locationA: matchData.currentUserLocation,
-                    locationB: matchData.match.location,
-                  },
-                })}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                onClick={async () => {
+                  try {
+                    const response = await fetch(
+                      `/api/location?locationA=${encodeURIComponent(matchData.currentUserLocation)}&locationB=${encodeURIComponent(matchData.match.location)}`
+                    );
+                    const data = await response.json();
+                    if (data.venues) {
+                      // Create a modal or expand a section to show the venues
+                      const venuesList = data.venues.map(venue => 
+                        `${venue.name} (${venue.rating}⭐️)\n${venue.address}\n\nOpen in Maps: ${venue.mapsUrl}`
+                      ).join('\n\n');
+                      alert('Suggested Coffee Spots:\n\n' + venuesList);
+                    }
+                  } catch (error) {
+                    console.error('Error fetching meetup locations:', error);
+                    alert('Failed to find meetup locations. Please try again.');
+                  }
+                }}
+                className="w-full inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
-                Suggest Meetup Location
+                Find Coffee Spots Halfway
               </button>
             </div>
           </div>

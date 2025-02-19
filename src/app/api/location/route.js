@@ -1,58 +1,83 @@
+import { NextResponse } from 'next/server';
 import axios from 'axios';
 
-export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    const { locationA, locationB } = req.body;
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const locationA = searchParams.get('locationA');
+  const locationB = searchParams.get('locationB');
 
-    try {
-      // Geocode the two locations to get latitude and longitude
-      const geocode = async (address) => {
-        const response = await axios.get(
-          'https://maps.googleapis.com/maps/api/geocode/json',
-          {
-            params: {
-              address,
-              key: process.env.GOOGLE_MAPS_API_KEY,
-            },
-          }
-        );
-        return response.data.results[0].geometry.location;
-      };
+  if (!locationA || !locationB) {
+    return NextResponse.json(
+      { error: 'Both locations are required' },
+      { status: 400 }
+    );
+  }
 
-      const locA = await geocode(locationA);
-      const locB = await geocode(locationB);
-
-      // Calculate midpoint
-      const midpoint = {
-        lat: (locA.lat + locB.lat) / 2,
-        lng: (locA.lng + locB.lng) / 2,
-      };
-
-      // Search for nearby coffee shops at the midpoint
-      const placesResponse = await axios.get(
-        'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
+  try {
+    // Geocode both locations
+    const geocodeLocation = async (zipCode) => {
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json`,
         {
           params: {
-            location: `${midpoint.lat},${midpoint.lng}`,
-            radius: 2000,
-            type: 'cafe',
+            address: zipCode,
             key: process.env.GOOGLE_MAPS_API_KEY,
           },
         }
       );
+      
+      if (response.data.results.length === 0) {
+        throw new Error(`No results found for zip code: ${zipCode}`);
+      }
+      
+      return response.data.results[0].geometry.location;
+    };
 
-      const recommendedVenue = placesResponse.data.results[0];
+    const [locationACoords, locationBCoords] = await Promise.all([
+      geocodeLocation(locationA),
+      geocodeLocation(locationB),
+    ]);
 
-      res.status(200).json({
-        name: recommendedVenue.name,
-        address: recommendedVenue.vicinity,
-        placeId: recommendedVenue.place_id,
-      });
-    } catch (error) {
-      console.error('Error fetching location:', error.response?.data || error.message);
-      res.status(500).json({ error: 'Failed to fetch location' });
-    }
-  } else {
-    res.status(405).json({ error: 'Method not allowed' });
+    // Calculate midpoint
+    const midpoint = {
+      lat: (locationACoords.lat + locationBCoords.lat) / 2,
+      lng: (locationACoords.lng + locationBCoords.lng) / 2,
+    };
+
+    // Search for coffee shops near midpoint
+    const placesResponse = await axios.get(
+      'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
+      {
+        params: {
+          location: `${midpoint.lat},${midpoint.lng}`,
+          radius: 3000, // 3km radius
+          type: 'cafe',
+          keyword: 'coffee',
+          rankby: 'rating',
+          key: process.env.GOOGLE_MAPS_API_KEY,
+        },
+      }
+    );
+
+    // Process and return top 5 venues
+    const venues = placesResponse.data.results
+      .slice(0, 5)
+      .map(venue => ({
+        name: venue.name,
+        address: venue.vicinity,
+        rating: venue.rating,
+        totalRatings: venue.user_ratings_total,
+        placeId: venue.place_id,
+        location: venue.geometry.location,
+        mapsUrl: `https://www.google.com/maps/place/?q=place_id:${venue.place_id}`,
+      }));
+
+    return NextResponse.json({ venues, midpoint });
+  } catch (error) {
+    console.error('Error finding meetup locations:', error);
+    return NextResponse.json(
+      { error: 'Failed to find meetup locations' },
+      { status: 500 }
+    );
   }
 }
