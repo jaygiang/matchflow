@@ -6,24 +6,21 @@ export async function POST(request) {
   try {
     const { name, email, profession, location, answer1, answer2, answer3 } = await request.json();
     
+    // Define the questions
     const question1 = "How would close friends describe you?";
     const question2 = "What are some random things you geek out on (unrelated to your job)?";
     const question3 = "Describe your pet peeves or things that bug you.";
 
-    const surveyText = `
-Q: ${question1}
-A: ${answer1}
-Q: ${question2}
-A: ${answer2}
-Q: ${question3}
-A: ${answer3}
-    `.trim();
+    // Create separate inputs for each Q&A pair
+    const input1 = `Q: ${question1}\nA: ${answer1}`;
+    const input2 = `Q: ${question2}\nA: ${answer2}`;
+    const input3 = `Q: ${question3}\nA: ${answer3}`;
 
-    // Generate embedding using OpenAI
+    // Generate embeddings for each answer using OpenAI
     const openaiResponse = await axios.post(
       'https://api.openai.com/v1/embeddings',
       {
-        input: surveyText,
+        input: [input1, input2, input3],
         model: 'text-embedding-ada-002',
       },
       {
@@ -32,9 +29,14 @@ A: ${answer3}
         },
       }
     );
-    const embedding = openaiResponse.data.data[0].embedding;
 
-    // Store in Neo4j and return the generated userId
+    // Extract the embeddings from the response
+    const embeddings = openaiResponse.data.data.map(item => item.embedding);
+    const embedding1 = embeddings[0];
+    const embedding2 = embeddings[1];
+    const embedding3 = embeddings[2];
+
+    // Store in Neo4j along with questions and answers, and return the generated userId
     const session = getSession();
     const result = await session.run(
       `
@@ -50,7 +52,9 @@ A: ${answer3}
         answer1: $answer1,
         answer2: $answer2,
         answer3: $answer3,
-        embedding: $embedding
+        embedding1: $embedding1,
+        embedding2: $embedding2,
+        embedding3: $embedding3
       })
       RETURN u.userId AS userId
       `,
@@ -59,13 +63,15 @@ A: ${answer3}
         email,
         profession,
         location,
+        question1,
+        question2,
+        question3,
         answer1,
         answer2,
         answer3,
-        embedding,
-        question1,
-        question2,
-        question3
+        embedding1,
+        embedding2,
+        embedding3,
       }
     );
     await session.close();

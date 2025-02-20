@@ -16,7 +16,7 @@ export default function CoffeeSpotModal({ isOpen, onClose, venues }) {
         <div className="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
           <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Suggested Coffee Spots
+              Suggested Spots
             </h3>
             <button
               type="button"
@@ -30,7 +30,7 @@ export default function CoffeeSpotModal({ isOpen, onClose, venues }) {
             </button>
           </div>
           <div className="p-4 md:p-5">
-            <p className="text-gray-500 dark:text-gray-400 mb-4">Select a coffee spot to meet:</p>
+            <p className="text-gray-500 dark:text-gray-400 mb-4">Select a spot to meet:</p>
             <ul className="space-y-4 mb-4">
               {venues.map((venue, index) => (
                 <li key={venue.placeId}>

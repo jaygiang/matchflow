@@ -59,12 +59,12 @@ export default function Match() {
         <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
           <div className="flex flex-col items-center pb-10 pt-8">
             <img className="w-24 h-24 mb-3 rounded-full shadow-lg" src="/profile-placeholder.jpg" alt={`${matchData.match.name}'s profile`}/>
-            <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{matchData.match.name}</h5>
+            <h2 className="mb-1 text-2xl font-bold text-gray-900 dark:text-white">{matchData.match.name}</h2>
             <span className="text-sm text-gray-500 dark:text-gray-400">{matchData.match.profession}</span>
             <span className="text-sm text-gray-500 dark:text-gray-400">{matchData.match.location}</span>
             
             <div className="mt-6 px-4">
-              <h3 className="text-lg text-center font-medium text-gray-900 dark:text-white mb-2">Why You Might Click</h3>
+              <h3 className="text-xl text-center font-medium text-gray-900 dark:text-white mb-2">Your Connection Insights</h3>
               <div className="text-gray-500 dark:text-gray-400 text-sm">
                 <p className="mb-2">{matchData.explanation.split('Similarities:')[0].trim()}</p>
                 

@@ -84,12 +84,10 @@ export async function GET(request) {
         const score3Percent = Math.round(
           cosineSimilarity(currentEmbeddings[2], matchedEmbeddings[2]) * 100,
         );
-console.log("user.name score1Percent", user.name, score1Percent);
-console.log("user.name score2Percent", user.name, score2Percent);
-console.log("user.name score3Percent", user.name, score3Percent);
+
         // Calculate overall match score as average of individual scores
         const matchScore = Math.round(
-          (score1Percent + score2Percent + score3Percent) / 3
+          (score1Percent + score2Percent + score3Percent) / 3,
         );
 
         return {
@@ -112,7 +110,7 @@ console.log("user.name score3Percent", user.name, score3Percent);
       await session.close();
       return NextResponse.json(
         { message: "No matches found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -124,7 +122,7 @@ console.log("user.name score3Percent", user.name, score3Percent);
       await session.close();
       return NextResponse.json(
         { message: "Invalid match data" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -134,7 +132,7 @@ console.log("user.name score3Percent", user.name, score3Percent);
       await session.close();
       return NextResponse.json(
         { message: "Matched user not found" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -143,6 +141,23 @@ console.log("user.name score3Percent", user.name, score3Percent);
       score2: score2Percent,
       score3: score3Percent,
     } = bestMatch.questionScores;
+
+    // Create relationship between current user and best match
+    const currentUserId = currentUser.userId;
+    const matchedUserId = bestMatch.userId;
+
+    await session.run(
+      `
+  MATCH (a:User {userId: $currentUserId}), (b:User {userId: $matchedUserId})
+  MERGE (a)-[r:MATCHES_WITH]->(b)
+  SET r.matchScore = $matchScore, r.createdAt = timestamp()
+  `,
+      {
+        currentUserId,
+        matchedUserId,
+        matchScore: bestMatch.matchScore,
+      },
+    );
 
     const prompt = `
     You are the user in this conversation, and you have a matched user named ${matchedUser.name}. 

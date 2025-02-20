@@ -9,12 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
+    "@heroicons/react": "^2.2.0",
     "axios": "^1.7.9",
+    "canvas-confetti": "^1.9.3",
+    "flowbite-react": "^0.10.2",
     "natural": "^8.0.1",
     "neo4j-driver": "^5.28.1",
     "next": "15.1.7",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-gauge-component": "^1.2.64"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -5,7 +5,6 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const locationA = searchParams.get('locationA');
   const locationB = searchParams.get('locationB');
-
   if (!locationA || !locationB) {
     return NextResponse.json(
       { error: 'Both locations are required' },
@@ -43,7 +42,7 @@ export async function GET(request) {
       lat: (locationACoords.lat + locationBCoords.lat) / 2,
       lng: (locationACoords.lng + locationBCoords.lng) / 2,
     };
-
+;
     // Search for coffee shops near midpoint
     const placesResponse = await axios.get(
       'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
@@ -60,7 +59,7 @@ export async function GET(request) {
         },
       }
     );
-console.log('placesResponse:', placesResponse.data);
+
     // Process and return top 5 venues
     const venues = placesResponse.data.results
       .slice(0, 5)
