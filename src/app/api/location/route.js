@@ -5,7 +5,10 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const locationA = searchParams.get('locationA');
   const locationB = searchParams.get('locationB');
-  if (!locationA || !locationB) {
+  
+  // Basic US zip code validation
+  const zipCodeRegex = /^\d{5}(-\d{4})?$/;
+  if (!locationA || !locationB || !zipCodeRegex.test(locationA) || !zipCodeRegex.test(locationB)) {
     return NextResponse.json(
       { error: 'Both locations are required' },
       { status: 400 }
