@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Coffee Meetup Spot Finder
 
-## Getting Started
+A web application that helps users find the perfect coffee shop meetup location between two points. Built with Next.js, Google Maps API, and Neo4j.
 
-First, run the development server:
+## Features
+
+- Find optimal coffee meetup locations between two zip codes
+- View coffee shop ratings and details
+- Interactive map visualization
+- User matching system
+- Survey-based preference matching
+
+## Prerequisites
+
+Before you begin, ensure you have installed:
+- Node.js (v18 or higher)
+- npm or yarn
+- Neo4j Database (local or cloud instance)
+- Google Maps API key
+
+## Environment Setup
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd <project-directory>
+```
+
+2. Copy the example environment file:
+```bash
+cp .env.example .env.local
+```
+
+3. Configure your environment variables in `.env.local`:
+```
+GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+NEO4J_URI=your_neo4j_uri
+NEO4J_USER=your_neo4j_username
+NEO4J_PASSWORD=your_neo4j_password
+```
+
+## Installation
+
+1. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+2. Build the application:
+```bash
+npm run build
+# or
+yarn build
+```
+
+## Running the Application
+
+### Development Mode
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will be available at `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Production Mode
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run start
+# or
+yarn start
+```
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+├── public/          # Static assets
+├── src/
+│   ├── app/        # Next.js 13+ app directory
+│   │   ├── api/    # API routes
+│   │   ├── components/  # React components
+│   │   └── lib/    # Utility functions
+│   └── ...
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## API Routes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `/api/location` - Handles location-based coffee shop search
+- `/api/match` - Handles user matching functionality
+- `/api/createUser` - Handles user creation
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Google Maps API for location services
+- Neo4j for graph database functionality
+- Next.js team for the amazing framework
