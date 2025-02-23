@@ -1,7 +1,6 @@
 'use client'
 
 export default function CoffeeSpotModal({ isOpen, onClose, venues }) {
-  console.log('Modal props:', { isOpen, venuesLength: venues?.length, venues });
   
   if (!isOpen) return null;
   if (!venues || venues.length === 0) return null;

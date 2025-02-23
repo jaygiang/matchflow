@@ -46,7 +46,7 @@ export default function Example() {
             <span className="sr-only">Your Company</span>
             <img
               alt=""
-              src="https://tailwindui.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+                   src="/logo-1.png"
               className="h-8 w-auto"
             />
           </a>
@@ -130,7 +130,7 @@ export default function Example() {
               <span className="sr-only">Your Company</span>
               <img
                 alt=""
-                src="https://tailwindui.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+                src="/logo-1.png"
                 className="h-8 w-auto"
               />
             </a>

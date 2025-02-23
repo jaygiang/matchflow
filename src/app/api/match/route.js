@@ -44,7 +44,7 @@ export async function GET(request) {
     // Calculate matches with per-question embeddings and similarity scores
     const matches = await Promise.all(
       otherUsers.map(async (user) => {
-        // Generate embeddings for each answer pair
+        // Generate embeddings for each answer pair (survey answers)
         const embeddingInputs = [
           currentUser.answer1,
           currentUser.answer2,
@@ -85,21 +85,35 @@ export async function GET(request) {
           cosineSimilarity(currentEmbeddings[2], matchedEmbeddings[2]) * 100,
         );
 
-        // Calculate overall match score as average of individual scores
-        const matchScore = Math.round(
-          (score1Percent + score2Percent + score3Percent) / 3,
-        );
+        // Calculate survey average score
+        const surveyAverage = (score1Percent + score2Percent + score3Percent) / 3;
+
+        // Calculate diffbot similarity if both users have a diffbotEmbedding
+        let diffbotScorePercent = 0;
+        if (currentUser.diffbotEmbedding && user.diffbotEmbedding) {
+          diffbotScorePercent = Math.round(
+            cosineSimilarity(currentUser.diffbotEmbedding, user.diffbotEmbedding) * 100,
+          );
+        }
+
+        // Combine survey and diffbot similarity into overall match score
+        const overallMatchScore =
+          diffbotScorePercent > 0
+            ? Math.round((surveyAverage + diffbotScorePercent) / 2)
+            : Math.round(surveyAverage);
 
         return {
           userId: user.userId,
           name: user.name,
           profession: user.profession,
           location: user.location,
-          matchScore: matchScore,
+          diffbotDescription: user.diffbotDescription,
+          matchScore: overallMatchScore,
           questionScores: {
             score1: score1Percent,
             score2: score2Percent,
             score3: score3Percent,
+            diffbot: diffbotScorePercent,
           },
         };
       }),
@@ -148,36 +162,56 @@ export async function GET(request) {
 
     await session.run(
       `
-  MATCH (a:User {userId: $currentUserId}), (b:User {userId: $matchedUserId})
-  MERGE (a)-[r:MATCHES_WITH]->(b)
-  SET r.matchScore = $matchScore, r.createdAt = timestamp()
-  `,
+      MATCH (a:User {userId: $currentUserId}), (b:User {userId: $matchedUserId})
+      MERGE (a)-[r:MATCHES_WITH]->(b)
+      SET r.matchScore = $matchScore, r.createdAt = timestamp()
+      `,
       {
         currentUserId,
         matchedUserId,
         matchScore: bestMatch.matchScore,
-      },
+      }
     );
 
+    // Build the prompt for generating an explanation, including Diffbot descriptions
     const prompt = `
     You are the user in this conversation, and you have a matched user named ${matchedUser.name}. 
     Below are both of your survey responses:
     
     YOUR SURVEY RESPONSES:
-Question 1: "How would close friends describe you?"
-- Similarity Score: ${score1Percent}%
-- Your Answer: ${currentUser.answer1}
-- Matched User's Answer: ${matchedUser.answer1}
-
-Question 2: "What are some random things you geek out on (unrelated to your job)?"
-- Similarity Score: ${score2Percent}%
-- Your Answer: ${currentUser.answer2}
-- Matched User's Answer: ${matchedUser.answer2}
-
-Question 3: "Describe your pet peeves or things that bug you."
-- Similarity Score: ${score3Percent}%
-- Your Answer: ${currentUser.answer3}
-- Matched User's Answer: ${matchedUser.answer3}
+    Question 1: "How would close friends describe you?"
+    - Similarity Score: ${score1Percent}%
+    - Your Answer: ${currentUser.answer1}
+    
+    Question 2: "What are some random things you geek out on (unrelated to your job)?"
+    - Similarity Score: ${score2Percent}%
+    - Your Answer: ${currentUser.answer2}
+    
+    Question 3: "Describe your pet peeves or things that bug you."
+    - Similarity Score: ${score3Percent}%
+    - Your Answer: ${currentUser.answer3}
+    
+    YOUR ADDITIONAL DESCRIPTION:
+    - ${currentUser.diffbotDescription || "No additional description available."}
+    
+    YOUR DIFFBOT EMBEDDING (Additional Description Vector, first 5 values):
+    - ${currentUser.diffbotEmbedding ? currentUser.diffbotEmbedding.slice(0, 5).join(", ") + " ..." : "No embedding available."}
+    
+    MATCHED USER'S SURVEY RESPONSES:
+    Question 1: "How would close friends describe them?"
+    - Matched User's Answer: ${matchedUser.answer1}
+    
+    Question 2: "What are some random things they geek out on (unrelated to their job)?"
+    - Matched User's Answer: ${matchedUser.answer2}
+    
+    Question 3: "Describe their pet peeves or things that bug them."
+    - Matched User's Answer: ${matchedUser.answer3}
+    
+    MATCHED USER'S ADDITIONAL DESCRIPTION:
+    - ${matchedUser.diffbotDescription || "No additional description available."}
+    
+    MATCHED USER'S DIFFBOT EMBEDDING (Additional Description Vector, first 5 values):
+    - ${matchedUser.diffbotEmbedding ? matchedUser.diffbotEmbedding.slice(0, 5).join(", ") + " ..." : "No embedding available."}
     
     INSTRUCTIONS:
     1. Write a single sentence explaining in the second person (i.e., addressing the current user as “you”) why you and ${matchedUser.name} might be good friends. Don't need title or header, list bullet points and numbers for this. Remove any charcters like **.
@@ -189,7 +223,7 @@ Question 3: "Describe your pet peeves or things that bug you."
     const openaiResponse = await axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
-        model: "gpt-3.5-turbo",
+        model: "gpt-4",
         messages: [
           {
             role: "system",
