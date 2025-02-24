@@ -6,20 +6,20 @@ MatchFlow is a graph-based social matching prototype built for the FirstWave Inn
 This project was originally built as part of a hackathon challenge for Ripl, an app idea focused on helping people make meaningful real-life connections. Our team built this as a proof of concept.
 
 ## Features
-- AI-Powered Similarity (OpenAI Embeddings + Cosine Similarity) – Finds best user matches based on meaning, not just keywords.
-- Diffbot Data Enrichment – Scrapes additional user profile information and integrates it into the matching process.
-- Smart Location-Based Meetup Suggestions (Google Maps API) – Suggests public places between matched users.
-- Graph Storage (Neo4j) – Stores user data and potential relationships.
-- Next.js Frontend – A clean UI for signing up, filling out a survey, and viewing matches.
+- **AI-Powered Similarity (OpenAI Embeddings + Cosine Similarity)** – Finds best user matches based on meaning, not just keywords.
+- **Diffbot Data Enrichment** – Scrapes additional user profile information and integrates it into the matching process.
+- **Smart Location-Based Meetup Suggestions (Google Maps API)** – Suggests public places between matched users.
+- **Graph Storage (Neo4j)** – Stores user data and potential relationships.
+- **Next.js Frontend** – A clean UI for signing up, filling out a survey, and viewing matches.
 
 ## Tech Stack
-- Next.js (React) – Frontend
-- Neo4j Aura – Stores user data and relationships
-- OpenAI Embeddings API – Generates vector representations for text-based survey responses
-- Cosine Similarity Algorithm – Computes match scores
-- Diffbot API – Enriches user profiles with web-scraped data
-- Google Maps API – Suggests meetup locations
-- Tailwind CSS – Styling
+- **Next.js (React)** – Frontend
+- **Neo4j Aura** – Stores user data and relationships
+- **OpenAI Embeddings API** – Generates vector representations for text-based survey responses
+- **Cosine Similarity Algorithm** – Computes match scores
+- **Diffbot API** – Enriches user profiles with web-scraped data
+- **Google Maps API** – Suggests meetup locations
+- **Tailwind CSS** – Styling
 
 ## Prerequisites
 
